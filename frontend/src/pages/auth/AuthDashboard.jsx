@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import {
   GoogleAuthProvider,
   GithubAuthProvider,
@@ -7,21 +6,13 @@ import {
   PhoneAuthProvider,
 } from "firebase/auth";
 
-import { getFirebaseUI, auth } from "../../firebase";
+import { getFirebaseUI } from "../../firebase";
+import { Navigate } from "react-router-dom";
 
 export const AuthDashboard = () => {
   const hostURL = import.meta.env.BASE_URL || "http://localhost:5173";
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const navigatedFrom = location.state?.from?.pathname || "/";
-
   useEffect(() => {
-    // Redirect to home if signed in
-    setTimeout(() => {
-      if (auth.currentUser) navigate(navigatedFrom);
-    }, 1000);
-
     const ui = getFirebaseUI();
 
     // Sign in options
@@ -54,7 +45,7 @@ export const AuthDashboard = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return (
+  return !sessionStorage.getItem("isSignedIn") ? (
     <div
       style={{
         width: "100vw",
@@ -93,5 +84,7 @@ export const AuthDashboard = () => {
         </section>
       </main>
     </div>
+  ) : (
+    <Navigate to="/" />
   );
 };

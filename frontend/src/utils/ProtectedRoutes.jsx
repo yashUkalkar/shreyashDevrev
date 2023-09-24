@@ -1,14 +1,10 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 
-import { auth } from "../firebase";
-
 export const ProtectedRoutes = () => {
-  const user = auth.currentUser;
-
   const location = useLocation();
-  return user ? (
+  return sessionStorage.getItem("isSignedIn") ? (
     <Outlet />
   ) : (
-    <Navigate to="/auth/email" state={{ from: location }} replace />
+    <Navigate to="/auth" state={{ from: location }} replace />
   );
 };
